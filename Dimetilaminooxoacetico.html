@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Ácido (Dimetilamino)oxoacético — Visor AR</title>
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #080d18;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 20% 30%, rgba(32,178,170,0.07) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(32,107,255,0.06) 0%, transparent 50%),
+        radial-gradient(circle, rgba(255,255,255,0.035) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 28px 28px;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .card {
+      position: relative;
+      z-index: 1;
+      width: min(96vw, 520px);
+      background: rgba(12,20,40,0.85);
+      border: 1px solid rgba(32,200,200,0.18);
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 0 0 1px rgba(32,200,200,0.06), 0 24px 60px rgba(0,0,0,0.5);
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .mol-title { font-size: 1rem; font-weight: 700; color: #e2f4f4; letter-spacing: -0.3px; }
+    .mol-formula { font-size: 0.68rem; color: #3ecfcf; font-family: "Courier New", monospace; letter-spacing: 0.3px; margin-top: 2px; }
+    .ar-badge {
+      display: flex; align-items: center; gap: 5px;
+      background: rgba(32,200,170,0.12);
+      border: 1px solid rgba(32,200,170,0.3);
+      border-radius: 30px; padding: 4px 10px;
+      font-size: 0.68rem; color: #3ecfcf; font-weight: 600;
+      letter-spacing: 0.4px; text-transform: uppercase; white-space: nowrap;
+    }
+    .ar-dot { width: 6px; height: 6px; background: #3ecfcf; border-radius: 50%; animation: pulse 1.8s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
+    .viewer-wrap {
+      position: relative; width: 100%; aspect-ratio: 1/1;
+      background: radial-gradient(ellipse at 50% 40%, #0d2040 0%, #060c18 70%);
+    }
+    model-viewer { width: 100%; height: 100%; background: transparent; --poster-color: transparent; }
+    .loader-overlay {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: radial-gradient(ellipse at 50% 40%, #0d2040 0%, #060c18 70%);
+      z-index: 10; transition: opacity 0.5s ease;
+    }
+    .loader-overlay.hidden { opacity: 0; pointer-events: none; }
+    .loader-ring {
+      width: 56px; height: 56px;
+      border: 2px solid rgba(62,207,207,0.12);
+      border-top-color: #3ecfcf;
+      border-radius: 50%; animation: spin 0.9s linear infinite; margin-bottom: 14px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loader-text { font-size: 0.75rem; color: rgba(62,207,207,0.7); letter-spacing: 1px; text-transform: uppercase; }
+    .error-panel {
+      display: none; position: absolute; inset: 0; z-index: 20;
+      background: radial-gradient(ellipse at 50% 40%, #0d2040 0%, #060c18 70%);
+      flex-direction: column; align-items: center; justify-content: center;
+      padding: 24px; text-align: center; gap: 8px;
+    }
+    .error-panel.visible { display: flex; }
+    .error-icon { font-size: 2rem; }
+    .error-title { color: #f87171; font-size: 0.85rem; font-weight: 600; }
+    .error-url { color: #3ecfcf; font-family: "Courier New", monospace; font-size: 0.7rem;
+      background: rgba(62,207,207,0.08); border: 1px solid rgba(62,207,207,0.2);
+      border-radius: 6px; padding: 6px 10px; word-break: break-all; }
+    .error-hint { color: rgba(200,220,220,0.35); font-size: 0.68rem; line-height: 1.6; white-space: pre-line; }
+    .controls {
+      padding: 14px 18px; display: flex; flex-direction: column; gap: 10px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .control-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .ctrl-label { font-size: 0.72rem; color: rgba(200,220,220,0.55); text-transform: uppercase; letter-spacing: 0.6px; white-space: nowrap; }
+    .toggle { position: relative; width: 40px; height: 22px; flex-shrink: 0; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-track {
+      position: absolute; inset: 0;
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 30px; cursor: pointer; transition: background .2s, border-color .2s;
+    }
+    .toggle-track::after {
+      content: ''; position: absolute; width: 16px; height: 16px;
+      background: rgba(200,220,220,0.5); border-radius: 50%;
+      top: 2px; left: 2px; transition: transform .2s, background .2s;
+    }
+    .toggle input:checked + .toggle-track { background: rgba(32,200,170,0.25); border-color: rgba(32,200,170,0.5); }
+    .toggle input:checked + .toggle-track::after { transform: translateX(18px); background: #3ecfcf; }
+    .speed-slider {
+      -webkit-appearance: none; flex: 1; height: 3px;
+      background: rgba(255,255,255,0.1); border-radius: 3px; outline: none; cursor: pointer;
+    }
+    .speed-slider::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%;
+      background: #3ecfcf; cursor: pointer; box-shadow: 0 0 0 3px rgba(62,207,207,0.2);
+    }
+    .speed-val { font-size: .75rem; color: #3ecfcf; font-family: "Courier New", monospace; min-width: 34px; text-align: right; }
+    .mol-info { padding: 0 18px; overflow: hidden; max-height: 0; transition: max-height .35s ease, padding .35s ease; }
+    .mol-info.open { max-height: 140px; padding: 10px 18px; }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; }
+    .info-item { display: flex; flex-direction: column; }
+    .info-key { font-size: .63rem; color: rgba(180,200,200,.4); text-transform: uppercase; letter-spacing: .5px; }
+    .info-val { font-size: .78rem; color: #c8e0e0; font-weight: 500; margin-top: 1px; line-height: 1.3; }
+    .info-divider { border: none; border-top: 1px solid rgba(255,255,255,.05); margin-bottom: 10px; }
+    .btn-info {
+      background: none; border: none; cursor: pointer; padding: 0;
+      display: flex; align-items: center; gap: 4px;
+      color: rgba(62,207,207,.6); font-size: .72rem; text-transform: uppercase; letter-spacing: .5px;
+      transition: color .2s;
+    }
+    .btn-info:hover { color: #3ecfcf; }
+    .btn-info-icon {
+      width: 16px; height: 16px; border: 1px solid currentColor; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700; flex-shrink: 0;
+    }
+    .tip { padding: 8px 18px 14px; font-size: .68rem; color: rgba(180,200,200,.35); text-align: center; }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="header">
+    <div>
+      <div class="mol-title">Ácido (Dimetilamino)oxoacético</div>
+      <div class="mol-formula">(CH₃)₂N–CO–COOH · C₄H₇NO₃</div>
+    </div>
+    <div class="ar-badge"><span class="ar-dot"></span>AR listo</div>
+  </div>
+
+  <div class="viewer-wrap">
+    <div class="loader-overlay" id="loader">
+      <div class="loader-ring"></div>
+      <span class="loader-text">Cargando molécula…</span>
+    </div>
+    <div class="error-panel" id="errorPanel">
+      <div class="error-icon">⚠️</div>
+      <div class="error-title">No se pudo cargar el modelo</div>
+      <div class="error-url" id="errorUrl"></div>
+      <div class="error-hint" id="errorHint"></div>
+    </div>
+    <model-viewer
+      id="mv"
+      src="Dimetilaminooxoacetico.glb"
+      alt="Ácido (Dimetilamino)oxoacético — modelo 3D interactivo"
+      ar
+      ar-modes="webxr scene-viewer quick-look"
+      ar-placement="floor"
+      camera-controls
+      disable-pan
+      auto-rotate
+      auto-rotate-delay="500"
+      rotation-per-second="30deg"
+      interpolation-decay="200"
+      shadow-intensity="1"
+      shadow-softness="0.7"
+      exposure="0.95"
+      environment-image="neutral"
+    ></model-viewer>
+  </div>
+
+  <div class="mol-info" id="molInfo">
+    <hr class="info-divider">
+    <div class="info-grid">
+      <div class="info-item">
+        <span class="info-key">Masa molar</span>
+        <span class="info-val">117,10 g/mol</span>
+      </div>
+      <div class="info-item">
+        <span class="info-key">Punto de ebullición</span>
+        <span class="info-val">n.d. (descompone)</span>
+      </div>
+      <div class="info-item">
+        <span class="info-key">Grupo funcional</span>
+        <span class="info-val">Carboxilo + Amida</span>
+      </div>
+      <div class="info-item">
+        <span class="info-key">pKa</span>
+        <span class="info-val">~2,0</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="control-row">
+      <span class="ctrl-label">Auto-rotación</span>
+      <label class="toggle">
+        <input type="checkbox" id="toggleRotate" checked>
+        <span class="toggle-track"></span>
+      </label>
+      <button class="btn-info" id="btnInfo" aria-label="Ver datos de la molécula">
+        <span class="btn-info-icon">i</span> Datos
+      </button>
+    </div>
+    <div class="control-row">
+      <span class="ctrl-label">Velocidad</span>
+      <input type="range" class="speed-slider" id="speedSlider" min="5" max="120" value="30" step="5">
+      <span class="speed-val" id="speedVal">30°/s</span>
+    </div>
+  </div>
+  <p class="tip">Toca y arrastra para girar · Pellizca para zoom · Pulsa AR para verla en tu espacio</p>
+</div>
+
+<script>
+  const mv          = document.getElementById('mv');
+  const loader      = document.getElementById('loader');
+  const errorPanel  = document.getElementById('errorPanel');
+  const errorUrl    = document.getElementById('errorUrl');
+  const errorHint   = document.getElementById('errorHint');
+  const speedSlider = document.getElementById('speedSlider');
+  const speedVal    = document.getElementById('speedVal');
+  const toggleRot   = document.getElementById('toggleRotate');
+  const btnInfo     = document.getElementById('btnInfo');
+  const molInfo     = document.getElementById('molInfo');
+
+  mv.addEventListener('load', () => {
+    loader.classList.add('hidden');
+    setTimeout(() => loader.remove(), 600);
+  });
+
+  mv.addEventListener('error', () => {
+    loader.classList.add('hidden');
+    errorPanel.classList.add('visible');
+    const resolvedUrl = new URL('Dimetilaminooxoacetico.glb', window.location.href).href;
+    errorUrl.textContent = resolvedUrl;
+    errorHint.textContent =
+      '• El archivo "Dimetilaminooxoacetico.glb" debe estar en la misma carpeta que este HTML.\n' +
+      '• Verifica mayúsculas/minúsculas en el nombre del archivo.\n' +
+      '• Confirma que el .glb esté subido al repositorio.';
+  });
+
+  speedSlider.addEventListener('input', () => {
+    const v = speedSlider.value;
+    mv.setAttribute('rotation-per-second', v + 'deg');
+    speedVal.textContent = v + '°/s';
+  });
+
+  toggleRot.addEventListener('change', () => {
+    toggleRot.checked ? mv.setAttribute('auto-rotate','') : mv.removeAttribute('auto-rotate');
+  });
+
+  btnInfo.addEventListener('click', () => {
+    molInfo.classList.toggle('open');
+    btnInfo.querySelector('.btn-info-icon').textContent = molInfo.classList.contains('open') ? '×' : 'i';
+  });
+</script>
+</body>
+</html>
