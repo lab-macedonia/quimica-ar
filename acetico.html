@@ -3,92 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visor AR + Giroscopio - Ácido Acético</title>
+    <title>Visor AR 360°</title>
+    
+    <!-- Cargamos los scripts oficiales de Google Model-Viewer -->
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    
     <style>
-        body { margin: 0; padding: 0; background-color: #f0f0f0; font-family: sans-serif; }
-        .contenedor { width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
-        model-viewer { width: 90%; height: 75vh; background-color: #ffffff; border-radius: 12px; }
-        .titulo { margin-top: 10px; font-size: 1.2rem; color: #333; font-weight: bold; }
-        /* Botón para solicitar el giroscopio */
-        .btn-giroscopio {
-            padding: 10px 16px; background-color: #007bff; color: white;
-            border: none; border-radius: 20px; font-size: 0.9rem;
-            cursor: pointer; margin-bottom: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        /* Restablecemos márgenes para usar toda la pantalla del teléfono */
+        body { 
+            margin: 0; 
+            padding: 0; 
+            background-color: #f8f9fa; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+        }
+        
+        /* Contenedor principal centrado */
+        .contenedor { 
+            width: 100vw; 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        
+        /* Estilizado del visor 3D */
+        model-viewer { 
+            width: 92%; 
+            height: 82vh; 
+            background-color: #ffffff; 
+            border-radius: 16px; 
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+        
+        /* Título inferior que acompaña la experiencia */
+        .titulo { 
+            margin-top: 15px; 
+            font-size: 1.2rem; 
+            color: #2d3748; 
+            font-weight: 700;
+            letter-spacing: -0.5px;
         }
     </style>
 </head>
 <body>
 
     <div class="contenedor">
-        <button class="btn-giroscopio" id="permisoGiroscopio">Activar Rotación por Movimiento 🔄</button>
-
+        <!-- 
+          Configuración de Model-Viewer:
+          - src: Nombre de tu archivo .glb en el repositorio.
+          - ar: Activa la compatibilidad con Realidad Aumentada.
+          - camera-controls: Permite que el alumno use sus dedos para hacer zoom o detener el giro.
+          - auto-rotate: Hace que la molécula rote sola en 360 grados.
+          - rotation-per-second: Controla la velocidad del giro constante (30 grados por segundo).
+        -->
         <model-viewer 
-            id="molecula"
             src="Acetico.glb" 
             ar 
             ar-modes="webxr scene-viewer quick-look" 
             camera-controls 
             touch-action="none" 
             shadow-intensity="1" 
-            alt="Modelo 3D de Ácido Acético">
+            auto-rotate
+            rotation-per-second="30deg"
+            alt="Modelo 3D interactivo en rotación continua 360°">
         </model-viewer>
         
-        <div class="titulo">Ácido Acético - Kit 3D AR</div>
+        <!-- Puedes cambiar este texto en cada página para que coincida con el ácido correspondiente -->
+        <div class="titulo">Ácido Acético 3D AR</div>
     </div>
 
-    <script>
-        const modelViewer = document.querySelector('#molecula');
-        const boton = document.querySelector('#permisoGiroscopio');
-
-        // Función que vincula la inclinación del teléfono con la cámara del modelo
-        function registrarGiroscopio() {
-            window.addEventListener('deviceorientation', (event) => {
-                // Controlamos la rotación horizontal (gamma) y vertical (beta)
-                if (event.gamma && event.beta) {
-                    const rotacionX = event.gamma * 0.5; // Ajusta el número para más o menos sensibilidad
-                    const rotacionY = (event.beta - 60) * 0.5; // Ajustado para una inclinación cómoda de lectura
-                    
-                    // Cambiamos la órbita de la cámara dinámicamente según el sensor
-                    modelViewer.cameraOrbit = `${rotacionX}deg ${rotacionY + 75}deg auto`;
-                }
-            });
-            // Escondemos el botón una vez activado
-            boton.style.display = 'none';
-        }
-
-        // Solicitar permisos formales (Requerido principalmente por Apple/iOS)
-        boton.addEventListener('click', () => {
-            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-                DeviceOrientationEvent.requestPermission()
-                    .then(permissionState => {
-                        if (permissionState === 'granted') {
-                            registrarGiroscopio();
-                        } else {
-                            alert('Permiso de movimiento denegado. Puedes usar tus dedos para rotar.');
-                        }
-                    })
-                    .catch(console.error);
-            } else {
-                // En dispositivos Android usualmente no requiere permiso explícito en web
-                registrarGiroscopio();
-            }
-        });
-    </script>
 </body>
 </html>
-
-</body>
-</html>
-
-<model-viewer 
-    src="acido_acetico.glb" 
-    ar 
-    ar-modes="webxr scene-viewer quick-look" 
-    camera-controls 
-    touch-action="none" 
-    shadow-intensity="1" 
-    alt="Modelo 3D interactivo"
-    auto-rotate
-    rotation-per-second="30deg">
-</model-viewer>
