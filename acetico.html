@@ -3,31 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visor AR - Ácido Acético</title>
-    <!-- Cargamos los scripts oficiales de Google Model-Viewer -->
+    <title>Visor AR + Giroscopio - Ácido Acético</title>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     <style>
         body { margin: 0; padding: 0; background-color: #f0f0f0; font-family: sans-serif; }
-        .contenedor { width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        model-viewer { width: 90%; height: 80vh; background-color: #ffffff; border-radius: 12px; }
+        .contenedor { width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+        model-viewer { width: 90%; height: 75vh; background-color: #ffffff; border-radius: 12px; }
         .titulo { margin-top: 10px; font-size: 1.2rem; color: #333; font-weight: bold; }
+        /* Botón para solicitar el giroscopio */
+        .btn-giroscopio {
+            padding: 10px 16px; background-color: #007bff; color: white;
+            border: none; border-radius: 20px; font-size: 0.9rem;
+            cursor: pointer; margin-bottom: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
 
     <div class="contenedor">
-        <!-- El visor interactivo de Google -->
+        <button class="btn-giroscopio" id="permisoGiroscopio">Activar Rotación por Movimiento 🔄</button>
+
         <model-viewer 
+            id="molecula"
             src="Acetico.glb" 
             ar 
             ar-modes="webxr scene-viewer quick-look" 
             camera-controls 
             touch-action="none" 
             shadow-intensity="1" 
-            alt="Modelo 3D interactivo de Ácido Acético">
+            alt="Modelo 3D de Ácido Acético">
         </model-viewer>
+        
         <div class="titulo">Ácido Acético - Kit 3D AR</div>
     </div>
+
+    <script>
+        const modelViewer = document.querySelector('#molecula');
+        const boton = document.querySelector('#permisoGiroscopio');
+
+        // Función que vincula la inclinación del teléfono con la cámara del modelo
+        function registrarGiroscopio() {
+            window.addEventListener('deviceorientation', (event) => {
+                // Controlamos la rotación horizontal (gamma) y vertical (beta)
+                if (event.gamma && event.beta) {
+                    const rotacionX = event.gamma * 0.5; // Ajusta el número para más o menos sensibilidad
+                    const rotacionY = (event.beta - 60) * 0.5; // Ajustado para una inclinación cómoda de lectura
+                    
+                    // Cambiamos la órbita de la cámara dinámicamente según el sensor
+                    modelViewer.cameraOrbit = `${rotacionX}deg ${rotacionY + 75}deg auto`;
+                }
+            });
+            // Escondemos el botón una vez activado
+            boton.style.display = 'none';
+        }
+
+        // Solicitar permisos formales (Requerido principalmente por Apple/iOS)
+        boton.addEventListener('click', () => {
+            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+                DeviceOrientationEvent.requestPermission()
+                    .then(permissionState => {
+                        if (permissionState === 'granted') {
+                            registrarGiroscopio();
+                        } else {
+                            alert('Permiso de movimiento denegado. Puedes usar tus dedos para rotar.');
+                        }
+                    })
+                    .catch(console.error);
+            } else {
+                // En dispositivos Android usualmente no requiere permiso explícito en web
+                registrarGiroscopio();
+            }
+        });
+    </script>
+</body>
+</html>
 
 </body>
 </html>
