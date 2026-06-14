@@ -2,7 +2,7 @@
 
 > Proyecto de investigación en química para la visualización de ácidos carboxílicos mediante modelos 3D interactivos con Realidad Aumentada.
 
-**Laboratorio MACEDONIA × LabTec UMCE**
+**Laboratorio MACEDONIA × LabTec × UMCE**
 
 ---
 
