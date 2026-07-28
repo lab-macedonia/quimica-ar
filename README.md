@@ -16,20 +16,20 @@ La iniciativa es parte de un proyecto de investigación en química y educación
 
 | # | Molécula | Fórmula | pKa |
 |---|----------|---------|-----|
-| 00 | Ácido Acético | C₂H₄O₂ | 4,76 |
-| 01 | Ácido Butanoico | C₄H₈O₂ | 4,82 |
-| 02 | Ácido Cloroacético | C₂H₃ClO₂ | 2,86 |
-| 03 | Ácido (Dimetilamino)oxoacético | C₄H₇NO₃ | ~2,0 |
-| 04 | Ácido 2,2-Dimetilpropanoico | C₅H₁₀O₂ | 5,03 |
-| 05 | Ácido Fórmico | CH₂O₂ | 3,75 |
-| 06 | Ácido Glicólico | C₂H₄O₃ | 3,83 |
-| 07 | Ácido Glioxílico | C₂H₂O₃ | 3,18 |
-| 08 | Ácido Láctico | C₃H₆O₃ | 3,86 |
-| 09 | Ácido Oxálico | C₂H₂O₄ | 1,25 / 4,27 |
-| 10 | Ácido Propanoico | C₃H₆O₂ | 4,87 |
-| 11 | Ácido Sulfanilacético | C₂H₄O₂S | 3,68 |
-| 12 | Ácido Trifluoroacético | C₂HF₃O₂ | 0,5 |
-| 13 | Ácido 2-Fosfonoacético | C₂H₅O₅P | 1,34 / 4,82 |
+| 00 | Ácido acético | C₂H₄O₂ | 4,76 |
+| 01 | Ácido butanoico | C₄H₈O₂ | 4,82 |
+| 02 | Ácido cloroacético | C₂H₃ClO₂ | 2,86 |
+| 03 | Ácido 2-(dimetilamino)-2-oxoacético | C₄H₇NO₃ | ~2,0 |
+| 04 | Ácido 2,2-dimetilpropanoico | C₅H₁₀O₂ | 5,03 |
+| 05 | Ácido fórmico | CH₂O₂ | 3,75 |
+| 06 | Ácido glicólico | C₂H₄O₃ | 3,83 |
+| 07 | Ácido glioxílico | C₂H₂O₃ | 3,18 |
+| 08 | Ácido láctico | C₃H₆O₃ | 3,86 |
+| 09 | Ácido oxálico | C₂H₂O₄ | 1,25 / 4,27 |
+| 10 | Ácido propanoico | C₃H₆O₂ | 4,87 |
+| 11 | Ácido tioglicólico | C₂H₄O₂S | 3,68 |
+| 12 | Ácido trifluoroacético | C₂HF₃O₂ | 0,5 |
+| 13 | Ácido 2-fosfonoacético | C₂H₅O₅P | 1,34 / 4,82 |
 
 ## 📱 Cómo usar
 
@@ -59,7 +59,7 @@ quimica-ar/
 ├── Sulfanylacetic.html
 ├── Trifluoroacetico.html
 ├── 2-phosphonoacetic.html
-├── Acetico.glb             ← Modelos 3D (formato glTF Binary)
+├── Acetico.glb             ← Modelos 3D (formato glTF Binary & USDZ)
 ├── Butanoico.glb
 └── ...
 ```
@@ -68,7 +68,7 @@ quimica-ar/
 
 - [Google Model Viewer](https://modelviewer.dev/) — renderizado 3D y AR en el navegador
 - HTML5 + CSS3 + JavaScript vanilla
-- Modelos en formato `.glb` (glTF Binary)
+- Modelos en formato `.glb` (glTF Binary) / `.usdz` (Universal Scene Description Zipped)
 - Alojado en [GitHub Pages](https://pages.github.com/)
 
 ## 🏛️ Instituciones
