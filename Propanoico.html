@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="es"><head>
+<html lang="es">
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Ácido Propanoico — Visor AR</title>
@@ -145,26 +146,42 @@
 <div class="card">
   <div class="header">
     <div>
-      <div class="mol-title">Ácido propanoico</div>
+      <div class="mol-title">Ácido Propanoico</div>
       <div class="mol-formula">CH₃CH₂COOH · C₃H₆O₂</div>
     </div>
     <div class="ar-badge"><span class="ar-dot"></span>AR listo</div>
   </div>
 
   <div class="viewer-wrap">
-    <div class="loader-overlay hidden" id="loader">
+    <div class="loader-overlay" id="loader">
       <div class="loader-ring"></div>
       <span class="loader-text">Cargando molécula…</span>
     </div>
-    <div class="error-panel visible" id="errorPanel">
+    <div class="error-panel" id="errorPanel">
       <div class="error-icon">⚠️</div>
       <div class="error-title">No se pudo cargar el modelo</div>
-      <div class="error-url" id="errorUrl">file:///C:/Users/razie/Downloads/acidos_ar/Propanoico.glb</div>
-      <div class="error-hint" id="errorHint">• El archivo "Propanoico.glb" debe estar en la misma carpeta que este HTML.
-• Verifica mayúsculas/minúsculas en el nombre del archivo.
-• Confirma que el .glb esté subido al repositorio.</div>
+      <div class="error-url" id="errorUrl"></div>
+      <div class="error-hint" id="errorHint"></div>
     </div>
-    <model-viewer id="mv" src="Propanoico.glb" ios-src="Propanoico.usdz" alt="Ácido Propanoico — modelo 3D interactivo" ar="" ar-modes="webxr scene-viewer quick-look" ar-placement="floor" camera-controls="" disable-pan="" auto-rotate="" auto-rotate-delay="500" rotation-per-second="30deg" interpolation-decay="200" shadow-intensity="1" shadow-softness="0.7" exposure="0.95" environment-image="neutral" ar-status="not-presenting"></model-viewer>
+    <model-viewer
+      id="mv"
+      src="Propanoico.glb"
+      ios-src="Propanoico.usdz"
+      alt="Ácido Propanoico — modelo 3D interactivo"
+      ar
+      ar-modes="webxr scene-viewer quick-look"
+      ar-placement="floor"
+      camera-controls
+      disable-pan
+      auto-rotate
+      auto-rotate-delay="500"
+      rotation-per-second="30deg"
+      interpolation-decay="200"
+      shadow-intensity="1"
+      shadow-softness="0.7"
+      exposure="0.95"
+      environment-image="neutral"
+    ></model-viewer>
   </div>
 
   <div class="mol-info" id="molInfo">
@@ -193,7 +210,7 @@
     <div class="control-row">
       <span class="ctrl-label">Auto-rotación</span>
       <label class="toggle">
-        <input type="checkbox" id="toggleRotate" checked="">
+        <input type="checkbox" id="toggleRotate" checked>
         <span class="toggle-track"></span>
       </label>
       <button class="btn-info" id="btnInfo" aria-label="Ver datos de la molécula">
@@ -252,5 +269,5 @@
     btnInfo.querySelector('.btn-info-icon').textContent = molInfo.classList.contains('open') ? '×' : 'i';
   });
 </script>
-
-</body></html>
+</body>
+</html>
