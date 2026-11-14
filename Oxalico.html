@@ -170,6 +170,21 @@
     .molnav a.next { text-align: right; }
     .molnav .nm { color: #c8e0e0; text-transform: none; letter-spacing: 0; font-size: .74rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .molnav .ghost { visibility: hidden; }
+    .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+    .chip { font: inherit; font-size: .7rem; font-weight: 600; letter-spacing: .4px; text-transform: uppercase;
+      color: rgba(200,220,220,.65); background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.12);
+      border-radius: 20px; padding: 5px 12px; cursor: pointer; transition: all .2s; }
+    .chip:hover { border-color: rgba(62,207,207,.45); color: #3ecfcf; }
+    .chip[aria-pressed="true"] { background: rgba(32,200,170,.18); border-color: rgba(32,200,170,.55); color: #3ecfcf; }
+    .chip:focus-visible { outline: 2px solid #3ecfcf; outline-offset: 2px; }
+    .hint-cooh { display: none; font-size: .7rem; color: #3ecfcf; line-height: 1.4; }
+    .hint-cooh.on { display: block; }
+    .hs { display: none; pointer-events: none; font-family: "Courier New", monospace; font-weight: 700; font-size: 11px;
+      background: rgba(5,10,20,.82); border: 1px solid rgba(62,207,207,.45); border-radius: 10px; padding: 1px 6px;
+      transform: translate(-50%, -50%); white-space: nowrap; }
+    .labels-on .hs { display: block; }
+    .hs[data-cooh="1"] { border-color: #3ecfcf; }
+    .labels-on.cooh-on .hs[data-cooh="0"] { opacity: .35; }
     @media (prefers-reduced-motion: reduce) { .ar-dot, .loader-ring { animation: none; } }
   </style>
 </head>
@@ -216,7 +231,14 @@
       shadow-softness="0.7"
       exposure="0.95"
       environment-image="neutral"
-    ></model-viewer>
+    >
+      <button class="hs" slot="hotspot-O1" data-position="0.6365 0.9819 0.363" data-normal="0 1 0" data-cooh="1" tabindex="-1" aria-hidden="true" style="color:#ff6b6b">O</button>
+      <button class="hs" slot="hotspot-C1" data-position="-0.2525 1.9819 0.412" data-normal="0 1 0" data-cooh="1" tabindex="-1" aria-hidden="true" style="color:#d5dde3">C</button>
+      <button class="hs" slot="hotspot-O2" data-position="-1.2945 1.9569 1.005" data-normal="0 1 0" data-cooh="1" tabindex="-1" aria-hidden="true" style="color:#ff6b6b">O</button>
+      <button class="hs" slot="hotspot-C2" data-position="0.2525 3.1869 -0.411" data-normal="0 1 0" data-cooh="1" tabindex="-1" aria-hidden="true" style="color:#d5dde3">C</button>
+      <button class="hs" slot="hotspot-O3" data-position="-0.6365 4.1859 -0.363" data-normal="0 1 0" data-cooh="1" tabindex="-1" aria-hidden="true" style="color:#ff6b6b">O</button>
+      <button class="hs" slot="hotspot-O4" data-position="1.2945 3.2109 -1.005" data-normal="0 1 0" data-cooh="1" tabindex="-1" aria-hidden="true" style="color:#ff6b6b">O</button>
+    </model-viewer>
   </div>
 
   <div class="mol-info" id="molInfo" role="region" aria-label="Datos de la molécula">
@@ -228,7 +250,7 @@
       </div>
       <div class="info-item">
         <span class="info-key">Punto de ebullición</span>
-        <span class="info-val">189 °C (descompone)</span>
+        <span class="info-val">Sublima a 157 °C (descompone ~189 °C)</span>
       </div>
       <div class="info-item">
         <span class="info-key">Grupo funcional</span>
@@ -252,6 +274,13 @@
         <span class="btn-info-icon">i</span> Datos
       </button>
     </div>
+    <div class="control-row">
+      <div class="chips" role="group" aria-label="Opciones de visualización">
+        <button class="chip" id="btnLabels" aria-pressed="false">Etiquetas</button>
+        <button class="chip" id="btnCooh" aria-pressed="false">Resaltar –COOH</button>
+      </div>
+    </div>
+    <p class="hint-cooh" id="hintCooh" aria-live="polite">Se resaltan los 2 grupos carboxilo (–COOH); el resto de la molécula se atenúa.</p>
     <div class="control-row">
       <label class="ctrl-label" for="speedSlider">Velocidad</label>
       <input type="range" class="speed-slider" id="speedSlider" min="5" max="120" value="30" step="5">
@@ -319,6 +348,36 @@
   toggleRot.addEventListener('change', () => {
     toggleRot.checked ? mv.setAttribute('auto-rotate','') : mv.removeAttribute('auto-rotate');
   });
+
+  /* ── Etiquetas de átomos y resaltado del grupo carboxilo ── */
+  const ATOMS = [{"id":"O1","cooh":true},{"id":"C1","cooh":true},{"id":"O2","cooh":true},{"id":"C2","cooh":true},{"id":"O3","cooh":true},{"id":"O4","cooh":true},{"id":"H1","cooh":true},{"id":"H2","cooh":true}];
+  const btnLabels = document.getElementById('btnLabels');
+  const btnCooh   = document.getElementById('btnCooh');
+  const hintCooh  = document.getElementById('hintCooh');
+  const viewerWrap = document.querySelector('.viewer-wrap');
+
+  btnLabels.addEventListener('click', () => {
+    const on = viewerWrap.classList.toggle('labels-on');
+    btnLabels.setAttribute('aria-pressed', on);
+  });
+
+  function setCooh(on) {
+    if (!mv.model) return;
+    for (const a of ATOMS) {
+      const m = mv.model.getMaterialByName('atom_' + a.id);
+      if (!m) continue;
+      m.pbrMetallicRoughness.setBaseColorFactor(on && !a.cooh ? [0.32, 0.32, 0.32, 1] : [1, 1, 1, 1]);
+      m.setEmissiveFactor(on && a.cooh ? [0.04, 0.04, 0.04] : [0, 0, 0]);
+    }
+    const e = mv.model.getMaterialByName('enlaces');
+    if (e) e.pbrMetallicRoughness.setBaseColorFactor(on ? [0.5, 0.5, 0.5, 1] : [1, 1, 1, 1]);
+    const e2 = mv.model.getMaterialByName('enlaces_b');
+    if (e2) e2.pbrMetallicRoughness.setBaseColorFactor(on ? [0.5, 0.5, 0.5, 1] : [1, 1, 1, 1]);
+    viewerWrap.classList.toggle('cooh-on', on);
+    hintCooh.classList.toggle('on', on);
+    btnCooh.setAttribute('aria-pressed', on);
+  }
+  btnCooh.addEventListener('click', () => setCooh(btnCooh.getAttribute('aria-pressed') !== 'true'));
 
   btnInfo.addEventListener('click', () => {
     const open = molInfo.classList.toggle('open');
