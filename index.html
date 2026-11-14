@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ácidos Carboxílicos en AR — Macedonia × LabTec UMCE</title>
+  <meta name="description" content="Visor de realidad aumentada de 14 ácidos carboxílicos: modelos 3D interactivos del Laboratorio MACEDONIA y LabTec, UMCE.">
+  <meta property="og:title" content="Ácidos Carboxílicos en AR — Macedonia × LabTec UMCE">
+  <meta property="og:description" content="Visor de realidad aumentada de 14 ácidos carboxílicos: modelos 3D interactivos del Laboratorio MACEDONIA y LabTec, UMCE.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_CL">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
@@ -16,7 +21,7 @@
       --surface2: #0e1e35;
       --text: #dff0f0;
       --text-muted: #6aacac;
-      --text-faint: rgba(106,172,172,0.45);
+      --text-faint: rgba(106,172,172,0.6);
       --border: rgba(62,207,207,0.12);
       --border-hover: rgba(62,207,207,0.35);
     }
@@ -29,364 +34,84 @@
       min-height: 100vh;
       overflow-x: hidden;
     }
-
-    /* ══════════════ HERO ══════════════ */
-    .hero {
-      position: relative;
-      min-height: 100svh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem 1.5rem 4rem;
-      overflow: hidden;
-    }
-
-    #canvas-mol {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0.45;
-      pointer-events: none;
-    }
-
-    .hero-inner {
-      position: relative;
-      z-index: 2;
-      text-align: center;
-      max-width: 680px;
-    }
-
-    /* Badges de instituciones */
-    .inst-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 2.5rem;
-    }
-    .inst-badge {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      background: rgba(10,22,40,0.8);
-      border: 1px solid var(--border-hover);
-      border-radius: 30px;
-      padding: 6px 14px 6px 10px;
-      font-size: 0.72rem;
-      font-weight: 600;
-      color: var(--teal);
-      letter-spacing: 0.4px;
-      text-transform: uppercase;
-    }
-    .inst-icon {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 10px;
-      font-weight: 800;
-      flex-shrink: 0;
-    }
+    .hero { position: relative; min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 1.5rem 4rem; overflow: hidden; }
+    #canvas-mol { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.45; pointer-events: none; }
+    .hero-inner { position: relative; z-index: 2; text-align: center; max-width: 680px; }
+    .inst-row { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 2.5rem; }
+    .inst-badge { display: flex; align-items: center; gap: 7px; background: rgba(10,22,40,0.8); border: 1px solid var(--border-hover); border-radius: 30px; padding: 6px 14px 6px 10px; font-size: 0.72rem; font-weight: 600; color: var(--teal); letter-spacing: 0.4px; text-transform: uppercase; }
+    .inst-icon { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; flex-shrink: 0; }
     .inst-icon.mac { background: rgba(62,207,207,0.2); color: var(--teal); border: 1px solid var(--teal-mid); }
     .inst-icon.umce { background: rgba(62,107,255,0.2); color: #7fa8ff; border: 1px solid rgba(62,107,255,0.4); }
     .inst-sep { color: var(--text-faint); font-size: 1rem; }
-
-    /* Eyebrow */
-    .hero-eyebrow {
-      font-size: 0.72rem;
-      letter-spacing: 2.5px;
-      text-transform: uppercase;
-      color: var(--text-faint);
-      margin-bottom: 1rem;
-    }
-
-    /* Headline */
-    .hero-h1 {
-      font-size: clamp(2.4rem, 7vw, 4.2rem);
-      font-weight: 900;
-      line-height: 1.05;
-      letter-spacing: -1.5px;
-      color: var(--text);
-      margin-bottom: 0.6rem;
-    }
-    .hero-h1 span {
-      color: var(--teal);
-      position: relative;
-    }
-
-    .hero-sub {
-      font-size: clamp(0.9rem, 2.5vw, 1.05rem);
-      color: var(--text-muted);
-      line-height: 1.65;
-      max-width: 520px;
-      margin: 0 auto 2rem;
-      font-weight: 400;
-    }
-
-    /* Stat pills */
-    .stat-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 2.8rem;
-    }
-    .stat-pill {
-      background: var(--teal-dim);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 5px 13px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--teal);
-      letter-spacing: 0.3px;
-    }
-    .stat-pill.neutral {
-      background: rgba(255,255,255,0.04);
-      border-color: rgba(255,255,255,0.07);
-      color: var(--text-muted);
-    }
-
-    /* CTA scroll */
-    .scroll-cta {
-      display: inline-flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      color: var(--text-faint);
-      font-size: 0.72rem;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      text-decoration: none;
-      transition: color 0.2s;
-    }
+    .hero-eyebrow { font-size: 0.72rem; letter-spacing: 2.5px; text-transform: uppercase; color: var(--text-faint); margin-bottom: 1rem; }
+    .hero-h1 { font-size: clamp(2.4rem, 7vw, 4.2rem); font-weight: 900; line-height: 1.05; letter-spacing: -1.5px; color: var(--text); margin-bottom: 0.6rem; }
+    .hero-h1 span { color: var(--teal); position: relative; }
+    .hero-sub { font-size: clamp(0.9rem, 2.5vw, 1.05rem); color: var(--text-muted); line-height: 1.65; max-width: 520px; margin: 0 auto 2rem; font-weight: 400; }
+    .stat-row { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 2.8rem; }
+    .stat-pill { background: var(--teal-dim); border: 1px solid var(--border); border-radius: 20px; padding: 5px 13px; font-size: 0.75rem; font-weight: 600; color: var(--teal); letter-spacing: 0.3px; }
+    .scroll-cta { display: inline-flex; flex-direction: column; align-items: center; gap: 6px; color: var(--text-faint); font-size: 0.72rem; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; transition: color 0.2s; }
     .scroll-cta:hover { color: var(--teal); }
-    .scroll-arrow {
-      width: 28px;
-      height: 28px;
-      border: 1px solid currentColor;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      animation: bounce 2s ease-in-out infinite;
-    }
+    .scroll-arrow { width: 28px; height: 28px; border: 1px solid currentColor; border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: bounce 2s ease-in-out infinite; }
     @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(5px)} }
-
-    /* ══════════════ SECCIÓN GRID ══════════════ */
-    .section-grid {
-      background: var(--bg);
-      padding: 0 1.25rem 5rem;
-    }
-
-    .section-header {
-      text-align: center;
-      padding: 4rem 0 2.5rem;
-      border-top: 1px solid var(--border);
-    }
-    .section-label {
-      font-size: 0.7rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--text-faint);
-      margin-bottom: 0.5rem;
-    }
-    .section-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--text);
-      letter-spacing: -0.5px;
-    }
-
-    /* Grid de moléculas */
-    .mol-grid {
-      max-width: 1080px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 14px;
-    }
-
-    /* Tarjeta de molécula */
-    .mol-card {
-      position: relative;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 20px 20px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      text-decoration: none;
-      transition: border-color 0.25s, background 0.25s, transform 0.18s;
-      overflow: hidden;
-    }
-    .mol-card::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: var(--teal);
-      opacity: 0;
-      transition: opacity 0.25s;
-    }
-    .mol-card:hover {
-      border-color: var(--border-hover);
-      background: var(--surface2);
-      transform: translateY(-2px);
-    }
-    .mol-card:hover::before { opacity: 1; }
-
-    /* Número de tarjeta */
-    .card-num {
-      font-size: 0.65rem;
-      font-weight: 700;
-      font-family: "Courier New", monospace;
-      color: var(--text-faint);
-      letter-spacing: 1.5px;
-    }
-
-    /* Nombre */
-    .card-name {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text);
-      line-height: 1.25;
-      letter-spacing: -0.3px;
-    }
-
-    /* Fórmula estructural */
-    .card-struct {
-      font-size: 0.72rem;
-      font-family: "Courier New", monospace;
-      color: var(--teal);
-      letter-spacing: 0.2px;
-    }
-
-    /* Pills de propiedades */
-    .card-props {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-      margin-top: 2px;
-    }
-    .prop-pill {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 20px;
-      padding: 3px 9px;
-      font-size: 0.64rem;
-      color: var(--text-muted);
-      letter-spacing: 0.2px;
-      white-space: nowrap;
-    }
-    .prop-pill.pka {
-      background: var(--teal-dim);
-      border-color: rgba(62,207,207,0.2);
-      color: var(--teal);
-      font-family: "Courier New", monospace;
-      font-weight: 600;
-    }
-
-    /* Botón ver */
-    .card-btn {
-      margin-top: auto;
-      padding-top: 10px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .card-btn-text {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--teal);
-      letter-spacing: 0.3px;
-      text-transform: uppercase;
-    }
-    .card-btn-arrow {
-      width: 26px;
-      height: 26px;
-      border: 1px solid var(--teal-mid);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s, transform 0.18s;
-    }
-    .mol-card:hover .card-btn-arrow {
-      background: var(--teal);
-      transform: translateX(3px);
-    }
-    .mol-card:hover .card-btn-arrow svg { stroke: #050a14; }
-
-    /* ══════════════ FOOTER ══════════════ */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 2.5rem 1.5rem;
-      text-align: center;
-    }
-    .footer-logos {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      margin-bottom: 1rem;
-    }
-    .footer-logo {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-    }
-    .logo-tag {
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-    }
+    .section-grid { background: var(--bg); padding: 0 1.25rem 5rem; }
+    .section-header { text-align: center; padding: 4rem 0 1.5rem; border-top: 1px solid var(--border); }
+    .section-label { font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-faint); margin-bottom: 0.5rem; }
+    .section-title { font-size: 1.5rem; font-weight: 700; color: var(--text); letter-spacing: -0.5px; }
+    .mol-grid { max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+    .mol-card { position: relative; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px 20px 16px; display: flex; flex-direction: column; gap: 10px; text-decoration: none; transition: border-color 0.25s, background 0.25s, transform 0.18s; overflow: hidden; }
+    .mol-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--teal); opacity: 0; transition: opacity 0.25s; }
+    .mol-card:hover, .mol-card:focus-visible { border-color: var(--border-hover); background: var(--surface2); transform: translateY(-2px); }
+    .mol-card:hover::before, .mol-card:focus-visible::before { opacity: 1; }
+    .mol-card:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+    .card-num { font-size: 0.65rem; font-weight: 700; font-family: "Courier New", monospace; color: var(--text-faint); letter-spacing: 1.5px; }
+    .card-name { font-size: 1rem; font-weight: 700; color: var(--text); line-height: 1.25; letter-spacing: -0.3px; }
+    .card-struct { font-size: 0.72rem; font-family: "Courier New", monospace; color: var(--teal); letter-spacing: 0.2px; }
+    .card-props { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
+    .prop-pill { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 20px; padding: 3px 9px; font-size: 0.64rem; color: var(--text-muted); letter-spacing: 0.2px; }
+    .prop-pill.pka { background: var(--teal-dim); border-color: rgba(62,207,207,0.2); color: var(--teal); font-family: "Courier New", monospace; font-weight: 600; }
+    .card-btn { margin-top: auto; padding-top: 10px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .card-btn-text { font-size: 0.75rem; font-weight: 600; color: var(--teal); letter-spacing: 0.3px; text-transform: uppercase; }
+    .card-btn-arrow { width: 26px; height: 26px; border: 1px solid var(--teal-mid); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s, transform 0.18s; }
+    .mol-card:hover .card-btn-arrow, .mol-card:focus-visible .card-btn-arrow { background: var(--teal); transform: translateX(3px); }
+    .mol-card:hover .card-btn-arrow svg, .mol-card:focus-visible .card-btn-arrow svg { stroke: #050a14; }
+    /* Controles de la colección */
+    .toolbar { max-width: 1080px; margin: 0 auto 1.25rem; display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; justify-content: space-between; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip { font: inherit; font-size: .72rem; font-weight: 600; color: var(--text-muted); background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); border-radius: 20px; padding: 6px 13px; cursor: pointer; transition: all .2s; }
+    .chip:hover { border-color: var(--border-hover); color: var(--teal); }
+    .chip[aria-pressed="true"] { background: var(--teal-dim); border-color: var(--teal-mid); color: var(--teal); }
+    .chip:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+    .sort { display: flex; align-items: center; gap: 8px; font-size: .72rem; color: var(--text-faint); }
+    .empty { display: none; text-align: center; color: var(--text-muted); font-size: .85rem; padding: 2rem 0; }
+    /* Ayuda AR */
+    .ar-help { max-width: 1080px; margin: 2.2rem auto 0; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 4px 18px; }
+    .ar-help summary { cursor: pointer; padding: 12px 0; font-size: .8rem; font-weight: 600; color: var(--teal); letter-spacing: .3px; list-style: none; }
+    .ar-help summary::-webkit-details-marker { display: none; }
+    .ar-help summary::before { content: "＋ "; }
+    .ar-help[open] summary::before { content: "－ "; }
+    .ar-help summary:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; border-radius: 6px; }
+    .ar-help ol, .ar-help p { font-size: .8rem; color: var(--text-muted); line-height: 1.7; padding-bottom: 12px; }
+    .ar-help ol { padding-left: 1.2rem; }
+    .ar-help strong { color: var(--text); font-weight: 600; }
+    footer { border-top: 1px solid var(--border); padding: 2.5rem 1.5rem; text-align: center; }
+    .footer-logos { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 1rem; }
+    .footer-logo { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .logo-tag { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
     .logo-tag.m { color: var(--teal); }
     .logo-tag.u { color: #7fa8ff; }
-    .logo-sub {
-      font-size: 0.6rem;
-      color: var(--text-faint);
-      letter-spacing: 0.3px;
-    }
-    .footer-sep {
-      width: 1px;
-      height: 32px;
-      background: var(--border);
-    }
-    .footer-desc {
-      font-size: 0.72rem;
-      color: var(--text-faint);
-      line-height: 1.7;
-      max-width: 480px;
-      margin: 0 auto;
-    }
-    .footer-year {
-      margin-top: 1.5rem;
-      font-size: 0.65rem;
-      color: rgba(106,172,172,0.25);
-      letter-spacing: 0.5px;
-    }
-
-    /* Reduced motion */
+    .logo-sub { font-size: 0.6rem; color: var(--text-faint); letter-spacing: 0.3px; }
+    .footer-sep { width: 1px; height: 32px; background: var(--border); }
+    .footer-desc { font-size: 0.72rem; color: var(--text-faint); line-height: 1.7; max-width: 480px; margin: 0 auto; }
+    .footer-year { margin-top: 1.5rem; font-size: 0.65rem; color: rgba(106,172,172,0.45); letter-spacing: 0.5px; }
     @media (prefers-reduced-motion: reduce) {
-      .scroll-arrow, .mol-card { animation: none; transition: none; }
+      .scroll-arrow { animation: none; }
+      .mol-card { transition: none; }
+      html { scroll-behavior: auto; }
     }
   </style>
 </head>
 <body>
 
-<!-- ══════════════════════ HERO ══════════════════════ -->
 <section class="hero" id="inicio">
   <canvas id="canvas-mol" aria-hidden="true"></canvas>
 
@@ -411,7 +136,7 @@
     </h1>
 
     <p class="hero-sub">
-      Explorá 13 moléculas en modelos 3D interactivos con Realidad Aumentada.
+      Explora 14 moléculas en modelos 3D interactivos con Realidad Aumentada.
       Una iniciativa conjunta entre el Laboratorio MACEDONIA y el LabTec de la UMCE
       para transformar la enseñanza de la química a través de la visualización molecular.
     </p>
@@ -432,15 +157,28 @@
   </div>
 </section>
 
-<!-- ══════════════════════ GRID ══════════════════════ -->
 <section class="section-grid" id="moleculas">
   <div class="section-header">
     <p class="section-label">Colección completa</p>
     <h2 class="section-title">Ácidos carboxílicos — 14 modelos</h2>
   </div>
 
-  <div class="mol-grid">
-    <a class="mol-card" href="Acetico.html" aria-label="Ver Ácido Acético en AR">
+  <div class="toolbar">
+    <div class="chips" role="group" aria-label="Filtrar por tipo">
+      <button class="chip" data-filter="all" aria-pressed="true">Todos</button>
+      <button class="chip" data-filter="simple" aria-pressed="false">Solo carboxilo</button>
+      <button class="chip" data-filter="otro" aria-pressed="false">Con otro grupo funcional</button>
+      <button class="chip" data-filter="di" aria-pressed="false">Dicarboxílico</button>
+    </div>
+    <div class="sort" role="group" aria-label="Ordenar">
+      <span>Ordenar:</span>
+      <button class="chip" data-sort="num" aria-pressed="true">Por número</button>
+      <button class="chip" data-sort="pka" aria-pressed="false">Por acidez (pKa)</button>
+    </div>
+  </div>
+
+  <div class="mol-grid" id="molGrid">
+    <a class="mol-card" href="Acetico.html" aria-label="Ver Ácido Acético en AR" data-i="0" data-cat="simple" data-pka="4.76">
       <span class="card-num">·00·</span>
       <span class="card-name">Ácido Acético</span>
       <span class="card-struct">CH₃COOH</span>
@@ -451,14 +189,10 @@
       </div>
       <div class="card-btn">
         <span class="card-btn-text">Ver en AR</span>
-        <span class="card-btn-arrow">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-            <path d="M2 6h8M6 2l4 4-4 4"/>
-          </svg>
-        </span>
+        <span class="card-btn-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span>
       </div>
     </a>
-    <a class="mol-card" href="Butanoico.html" aria-label="Ver Ácido Butanoico en AR">
+    <a class="mol-card" href="Butanoico.html" aria-label="Ver Ácido Butanoico en AR" data-i="1" data-cat="simple" data-pka="4.82">
       <span class="card-num">·01·</span>
       <span class="card-name">Ácido Butanoico</span>
       <span class="card-struct">CH₃CH₂CH₂COOH</span>
@@ -469,14 +203,10 @@
       </div>
       <div class="card-btn">
         <span class="card-btn-text">Ver en AR</span>
-        <span class="card-btn-arrow">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-            <path d="M2 6h8M6 2l4 4-4 4"/>
-          </svg>
-        </span>
+        <span class="card-btn-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span>
       </div>
     </a>
-    <a class="mol-card" href="Cloroacetico.html" aria-label="Ver Ácido Cloroacético en AR">
+    <a class="mol-card" href="Cloroacetico.html" aria-label="Ver Ácido Cloroacético en AR" data-i="2" data-cat="simple" data-pka="2.87">
       <span class="card-num">·02·</span>
       <span class="card-name">Ácido Cloroacético</span>
       <span class="card-struct">ClCH₂COOH</span>
@@ -487,14 +217,10 @@
       </div>
       <div class="card-btn">
         <span class="card-btn-text">Ver en AR</span>
-        <span class="card-btn-arrow">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-            <path d="M2 6h8M6 2l4 4-4 4"/>
-          </svg>
-        </span>
+        <span class="card-btn-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span>
       </div>
     </a>
-    <a class="mol-card" href="Dimetilaminooxoacetico.html" aria-label="Ver Ácido 2-(Dimetilamino)-2-oxoacético en AR">
+    <a class="mol-card" href="Dimetilaminooxoacetico.html" aria-label="Ver Ácido 2-(Dimetilamino)-2-oxoacético en AR" data-i="3" data-cat="otro" data-pka="999">
       <span class="card-num">·03·</span>
       <span class="card-name">Ácido 2-(Dimetilamino)-2-oxoacético</span>
       <span class="card-struct">(CH₃)₂N–CO–COOH</span>
@@ -505,14 +231,10 @@
       </div>
       <div class="card-btn">
         <span class="card-btn-text">Ver en AR</span>
-        <span class="card-btn-arrow">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-            <path d="M2 6h8M6 2l4 4-4 4"/>
-          </svg>
-        </span>
+        <span class="card-btn-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span>
       </div>
     </a>
-    <a class="mol-card" href="Dimetilpropanoico.html" aria-label="Ver Ácido 2,2-Dimetilpropanoico en AR">
+    <a class="mol-card" href="Dimetilpropanoico.html" aria-label="Ver Ácido 2,2-Dimetilpropanoico en AR" data-i="4" data-cat="simple" data-pka="5.03">
       <span class="card-num">·04·</span>
       <span class="card-name">Ácido 2,2-Dimetilpropanoico</span>
       <span class="card-struct">(CH₃)₃C–COOH</span>
@@ -523,14 +245,10 @@
       </div>
       <div class="card-btn">
         <span class="card-btn-text">Ver en AR</span>
-        <span class="card-btn-arrow">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-            <path d="M2 6h8M6 2l4 4-4 4"/>
-          </svg>
-        </span>
+        <span class="card-btn-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span>
       </div>
     </a>
-    <a class="mol-card" href="Formico.html" aria-label="Ver Ácido Fórmico en AR">
+    <a class="mol-card" href="Formico.html" aria-label="Ver Ácido Fórmico en AR" data-i="5" data-cat="simple" data-pka="3.75">
       <span class="card-num">·05·</span>
       <span class="card-name">Ácido Fórmico</span>
       <span class="card-struct">HCOOH</span>
@@ -541,14 +259,10 @@
       </div>
       <div class="card-btn">
         <span class="card-btn-text">Ver en AR</span>
-        <span class="card-btn-arrow">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-            <path d="M2 6h8M6 2l4 4-4 4"/>
-          </svg>
-        </span>
+        <span class="card-btn-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span>
       </div>
     </a>
-    <a class="mol-card" href="Glicolico.html" aria-label="Ver Ácido Glicólico en AR">
+    <a class="mol-card" href="Glicolico.html" aria-label="Ver Ácido Glicólico en AR" data-i="6" data-cat="otro" data-pka="3.83">
       <span class="card-num">·06·</span>
       <span class="card-name">Ácido Glicólico</span>
       <span class="card-struct">HOCH₂COOH</span>
@@ -559,14 +273,10 @@
       </div>
       <div class="card-btn">
         <span class="card-btn-text">Ver en AR</span>
-        <span class="card-btn-arrow">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-            <path d="M2 6h8M6 2l4 4-4 4"/>
-          </svg>
-        </span>
+        <span class="card-btn-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span>
       </div>
     </a>
-    <a class="mol-card" href="Glioxilico.html" aria-label="Ver Ácido Glioxílico en AR">
+    <a class="mol-card" href="Glioxilico.html" aria-label="Ver Ácido Glioxílico en AR" data-i="7" data-cat="otro" data-pka="3.3">
       <span class="card-num">·07·</span>
       <span class="card-name">Ácido Glioxílico</span>
       <span class="card-struct">OHC–COOH</span>
@@ -577,14 +287,10 @@
       </div>
       <div class="card-btn">
         <span class="card-btn-text">Ver en AR</span>
-        <span class="card-btn-arrow">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-            <path d="M2 6h8M6 2l4 4-4 4"/>
-          </svg>
-        </span>
+        <span class="card-btn-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span>
       </div>
     </a>
-    <a class="mol-card" href="Lactico.html" aria-label="Ver Ácido Láctico en AR">
+    <a class="mol-card" href="Lactico.html" aria-label="Ver Ácido Láctico en AR" data-i="8" data-cat="otro" data-pka="3.86">
       <span class="card-num">·08·</span>
       <span class="card-name">Ácido Láctico</span>
       <span class="card-struct">CH₃CH(OH)COOH</span>
@@ -595,14 +301,10 @@
       </div>
       <div class="card-btn">
         <span class="card-btn-text">Ver en AR</span>
-        <span class="card-btn-arrow">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-            <path d="M2 6h8M6 2l4 4-4 4"/>
-          </svg>
-        </span>
+        <span class="card-btn-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span>
       </div>
     </a>
-    <a class="mol-card" href="Oxalico.html" aria-label="Ver Ácido Oxálico en AR">
+    <a class="mol-card" href="Oxalico.html" aria-label="Ver Ácido Oxálico en AR" data-i="9" data-cat="di" data-pka="1.25">
       <span class="card-num">·09·</span>
       <span class="card-name">Ácido Oxálico</span>
       <span class="card-struct">HOOC–COOH</span>
@@ -613,14 +315,10 @@
       </div>
       <div class="card-btn">
         <span class="card-btn-text">Ver en AR</span>
-        <span class="card-btn-arrow">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-            <path d="M2 6h8M6 2l4 4-4 4"/>
-          </svg>
-        </span>
+        <span class="card-btn-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span>
       </div>
     </a>
-    <a class="mol-card" href="Propanoico.html" aria-label="Ver Ácido Propanoico en AR">
+    <a class="mol-card" href="Propanoico.html" aria-label="Ver Ácido Propanoico en AR" data-i="10" data-cat="simple" data-pka="4.88">
       <span class="card-num">·10·</span>
       <span class="card-name">Ácido Propanoico</span>
       <span class="card-struct">CH₃CH₂COOH</span>
@@ -631,14 +329,10 @@
       </div>
       <div class="card-btn">
         <span class="card-btn-text">Ver en AR</span>
-        <span class="card-btn-arrow">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-            <path d="M2 6h8M6 2l4 4-4 4"/>
-          </svg>
-        </span>
+        <span class="card-btn-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span>
       </div>
     </a>
-    <a class="mol-card" href="Sulfanylacetic.html" aria-label="Ver Ácido Tioglicólico en AR">
+    <a class="mol-card" href="Sulfanylacetic.html" aria-label="Ver Ácido Tioglicólico en AR" data-i="11" data-cat="otro" data-pka="3.6">
       <span class="card-num">·11·</span>
       <span class="card-name">Ácido Tioglicólico</span>
       <span class="card-struct">HSCH₂COOH</span>
@@ -649,14 +343,10 @@
       </div>
       <div class="card-btn">
         <span class="card-btn-text">Ver en AR</span>
-        <span class="card-btn-arrow">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-            <path d="M2 6h8M6 2l4 4-4 4"/>
-          </svg>
-        </span>
+        <span class="card-btn-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span>
       </div>
     </a>
-    <a class="mol-card" href="Trifluoroacetico.html" aria-label="Ver Ácido Trifluoroacético en AR">
+    <a class="mol-card" href="Trifluoroacetico.html" aria-label="Ver Ácido Trifluoroacético en AR" data-i="12" data-cat="simple" data-pka="0.23">
       <span class="card-num">·12·</span>
       <span class="card-name">Ácido Trifluoroacético</span>
       <span class="card-struct">CF₃COOH</span>
@@ -667,14 +357,10 @@
       </div>
       <div class="card-btn">
         <span class="card-btn-text">Ver en AR</span>
-        <span class="card-btn-arrow">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-            <path d="M2 6h8M6 2l4 4-4 4"/>
-          </svg>
-        </span>
+        <span class="card-btn-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span>
       </div>
     </a>
-    <a class="mol-card" href="2-phosphonoacetic.html" aria-label="Ver Ácido 2-Fosfonoacético en AR">
+    <a class="mol-card" href="2-phosphonoacetic.html" aria-label="Ver Ácido 2-Fosfonoacético en AR" data-i="13" data-cat="otro" data-pka="2.0">
       <span class="card-num">·13·</span>
       <span class="card-name">Ácido 2-Fosfonoacético</span>
       <span class="card-struct">H₂O₃P–CH₂–COOH</span>
@@ -685,17 +371,24 @@
       </div>
       <div class="card-btn">
         <span class="card-btn-text">Ver en AR</span>
-        <span class="card-btn-arrow">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-            <path d="M2 6h8M6 2l4 4-4 4"/>
-          </svg>
-        </span>
+        <span class="card-btn-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 6h8M6 2l4 4-4 4"/></svg></span>
       </div>
     </a>
   </div>
+  <p class="empty" id="emptyMsg">No hay moléculas en esta categoría.</p>
+
+  <details class="ar-help">
+    <summary>¿Cómo usar la realidad aumentada?</summary>
+    <ol>
+      <li>Abre la molécula que quieres ver y espera a que cargue el modelo 3D.</li>
+      <li>Pulsa el botón <strong>AR</strong> que aparece sobre el visor.</li>
+      <li><strong>Android:</strong> usa Chrome en un teléfono compatible con ARCore. <strong>iPhone o iPad:</strong> usa Safari.</li>
+      <li>Apunta la cámara a una superficie plana (mesa o piso) y mueve el teléfono hasta que la molécula se ancle.</li>
+    </ol>
+    <p>Si tu dispositivo no admite AR, igual puedes girar y acercar el modelo en el visor 3D; la insignia superior mostrará «Solo visor 3D».</p>
+  </details>
 </section>
 
-<!-- ══════════════════════ FOOTER ══════════════════════ -->
 <footer>
   <div class="footer-logos">
     <div class="footer-logo">
@@ -718,10 +411,9 @@
     formación inicial docente, mediante modelos 3D de ácidos carboxílicos en Realidad
     Aumentada. Desarrollado conjuntamente por el Laboratorio MACEDONIA y el LabTec de la UMCE.
   </p>
-  <p class="footer-year">© 2025 · Laboratorio MACEDONIA · LabTec UMCE · Todos los derechos reservados</p>
+  <p class="footer-year">© 2026 · Laboratorio MACEDONIA · LabTec UMCE · Todos los derechos reservados</p>
 </footer>
 
-<!-- ══════════════════════ SCRIPTS ══════════════════════ -->
 <script>
 /* ── Red molecular animada en el canvas del hero ── */
 (function() {
@@ -789,18 +481,52 @@
 
   resize();
   init();
-  raf = requestAnimationFrame(draw);
+
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    ctx.clearRect(0, 0, W, H);
+  } else {
+    raf = requestAnimationFrame(draw);
+  }
 
   let resizeTimer;
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => { resize(); init(); }, 120);
   });
+})();
 
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    cancelAnimationFrame(raf);
-    ctx.clearRect(0, 0, W, H);
+/* ── Filtro por tipo y orden por número / pKa ── */
+(function() {
+  const grid   = document.getElementById("molGrid");
+  const cards  = Array.from(grid.querySelectorAll(".mol-card"));
+  const empty  = document.getElementById("emptyMsg");
+  let filter = "all", sort = "num";
+
+  function apply() {
+    const sorted = cards.slice().sort((a, b) =>
+      sort === "pka"
+        ? (parseFloat(a.dataset.pka) - parseFloat(b.dataset.pka)) || (a.dataset.i - b.dataset.i)
+        : a.dataset.i - b.dataset.i);
+    let shown = 0;
+    sorted.forEach(c => {
+      const ok = filter === "all" || c.dataset.cat === filter;
+      c.style.display = ok ? "" : "none";
+      if (ok) shown++;
+      grid.appendChild(c);
+    });
+    empty.style.display = shown ? "none" : "block";
   }
+
+  document.querySelectorAll("[data-filter]").forEach(b => b.addEventListener("click", () => {
+    filter = b.dataset.filter;
+    document.querySelectorAll("[data-filter]").forEach(x => x.setAttribute("aria-pressed", x === b));
+    apply();
+  }));
+  document.querySelectorAll("[data-sort]").forEach(b => b.addEventListener("click", () => {
+    sort = b.dataset.sort;
+    document.querySelectorAll("[data-sort]").forEach(x => x.setAttribute("aria-pressed", x === b));
+    apply();
+  }));
 })();
 </script>
 
