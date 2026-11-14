@@ -250,7 +250,7 @@
       </div>
       <div class="info-item">
         <span class="info-key">Punto de ebullición</span>
-        <span class="info-val">122 °C (12 mmHg)</span>
+        <span class="info-val">122 °C (15 mmHg)</span>
       </div>
       <div class="info-item">
         <span class="info-key">Grupo funcional</span>
@@ -371,8 +371,6 @@
     }
     const e = mv.model.getMaterialByName('enlaces');
     if (e) e.pbrMetallicRoughness.setBaseColorFactor(on ? [0.5, 0.5, 0.5, 1] : [1, 1, 1, 1]);
-    const e2 = mv.model.getMaterialByName('enlaces_b');
-    if (e2) e2.pbrMetallicRoughness.setBaseColorFactor(on ? [0.5, 0.5, 0.5, 1] : [1, 1, 1, 1]);
     viewerWrap.classList.toggle('cooh-on', on);
     hintCooh.classList.toggle('on', on);
     btnCooh.setAttribute('aria-pressed', on);

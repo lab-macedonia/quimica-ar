@@ -260,7 +260,7 @@
       </div>
       <div class="info-item">
         <span class="info-key">pKa</span>
-        <span class="info-val">pKa₁ 2,0 · pKa₂ 5,11 · pKa₃ 8,69</span>
+        <span class="info-val">pKa₁ 2,0 · pKa₂ 5,11 · pKa₃ 8,69 <a href="index.html#fuentes" title="Valor sin fuente verificada: ver Fuentes" style="color:inherit">†</a></span>
       </div>
     </div>
   </div>
@@ -373,8 +373,6 @@
     }
     const e = mv.model.getMaterialByName('enlaces');
     if (e) e.pbrMetallicRoughness.setBaseColorFactor(on ? [0.5, 0.5, 0.5, 1] : [1, 1, 1, 1]);
-    const e2 = mv.model.getMaterialByName('enlaces_b');
-    if (e2) e2.pbrMetallicRoughness.setBaseColorFactor(on ? [0.5, 0.5, 0.5, 1] : [1, 1, 1, 1]);
     viewerWrap.classList.toggle('cooh-on', on);
     hintCooh.classList.toggle('on', on);
     btnCooh.setAttribute('aria-pressed', on);
