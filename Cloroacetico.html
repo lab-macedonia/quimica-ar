@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Ácido Cloroacético — Visor AR</title>
   <meta name="description" content="Ácido Cloroacético (C₂H₃ClO₂): modelo 3D interactivo con realidad aumentada. Laboratorio MACEDONIA × LabTec, UMCE.">
+  <link rel="preconnect" href="https://ajax.googleapis.com" crossorigin>
+  <link rel="modulepreload" href="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js">
+  <link rel="preload" href="Cloroacetico.glb" as="fetch" crossorigin>
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -185,6 +188,17 @@
     .labels-on .hs { display: block; }
     .hs[data-cooh="1"] { border-color: #3ecfcf; }
     .labels-on.cooh-on .hs[data-cooh="0"] { opacity: .35; }
+    .labels-on .hs.hs-h { display: none; }
+    .measure-on .hs { display: block; pointer-events: auto; cursor: pointer; padding: 5px 10px; font-size: 12px; }
+    .measure-on .hs.hs-h { padding: 4px 8px; font-size: 10px; border-color: rgba(255,255,255,.35); }
+    .measure-on .hs.sel { background: #3ecfcf; color: #050a14 !important; border-color: #fff; opacity: 1 !important; }
+    .measure-on .hs:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+    .measure { background: rgba(62,207,207,.07); border: 1px solid rgba(62,207,207,.25); border-radius: 12px; padding: 10px 12px; display: none; flex-direction: column; gap: 8px; }
+    .measure.on { display: flex; }
+    .measure-text { font-size: .78rem; line-height: 1.55; color: #dff0f0; margin: 0; }
+    .measure-text b { color: #3ecfcf; }
+    .measure-text small { display: block; color: #6aacac; font-size: .68rem; margin-top: 2px; }
+    .measure-actions { display: flex; gap: 8px; flex-wrap: wrap; }
     @media (prefers-reduced-motion: reduce) { .ar-dot, .loader-ring { animation: none; } }
   </style>
 </head>
@@ -192,7 +206,7 @@
 <div class="card">
   <div class="topnav">
     <a class="back" href="./#moleculas">← Colección</a>
-    <span class="counter" aria-label="Molécula 3 de 14">3 / 14</span>
+    <span class="counter" aria-label="Molécula 3 de 14"><a href="comparar.html?a=Cloroacetico" style="color:inherit;margin-right:12px">Comparar</a>3 / 14</span>
   </div>
   <div class="header">
     <div>
@@ -232,11 +246,14 @@
       exposure="0.95"
       environment-image="neutral"
     >
-      <button class="hs" slot="hotspot-Cl1" data-position="2.1807 1.4579 0.2485" data-normal="0 1 0" data-cooh="0" tabindex="-1" aria-hidden="true" style="color:#5ee08a">Cl</button>
-      <button class="hs" slot="hotspot-O1" data-position="-1.6354 2.3789 -0.1715" data-normal="0 1 0" data-cooh="1" tabindex="-1" aria-hidden="true" style="color:#ff6b6b">O</button>
-      <button class="hs" slot="hotspot-O2" data-position="-0.6384 0.3699 0.0585" data-normal="0 1 0" data-cooh="1" tabindex="-1" aria-hidden="true" style="color:#ff6b6b">O</button>
-      <button class="hs" slot="hotspot-C1" data-position="0.6896 2.4179 0.0435" data-normal="0 1 0" data-cooh="0" tabindex="-1" aria-hidden="true" style="color:#d5dde3">C</button>
-      <button class="hs" slot="hotspot-C2" data-position="-0.5634 1.5629 -0.0155" data-normal="0 1 0" data-cooh="1" tabindex="-1" aria-hidden="true" style="color:#d5dde3">C</button>
+      <button class="hs" slot="hotspot-Cl1" data-id="Cl1" data-position="2.1807 1.4579 0.2485" data-normal="0 1 0" data-cooh="0" aria-label="Átomo Cl" tabindex="-1" style="color:#5ee08a">Cl</button>
+      <button class="hs" slot="hotspot-O1" data-id="O1" data-position="-1.6354 2.3789 -0.1715" data-normal="0 1 0" data-cooh="1" aria-label="Átomo O" tabindex="-1" style="color:#ff6b6b">O</button>
+      <button class="hs" slot="hotspot-O2" data-id="O2" data-position="-0.6384 0.3699 0.0585" data-normal="0 1 0" data-cooh="1" aria-label="Átomo O" tabindex="-1" style="color:#ff6b6b">O</button>
+      <button class="hs" slot="hotspot-C1" data-id="C1" data-position="0.6896 2.4179 0.0435" data-normal="0 1 0" data-cooh="0" aria-label="Átomo C" tabindex="-1" style="color:#d5dde3">C</button>
+      <button class="hs" slot="hotspot-C2" data-id="C2" data-position="-0.5634 1.5629 -0.0155" data-normal="0 1 0" data-cooh="1" aria-label="Átomo C" tabindex="-1" style="color:#d5dde3">C</button>
+      <button class="hs hs-h" slot="hotspot-H1" data-id="H1" data-position="0.7715 2.9948 -0.8775" data-normal="0 1 0" data-cooh="0" aria-label="Átomo H" tabindex="-1" style="color:#ffffff">H</button>
+      <button class="hs hs-h" slot="hotspot-H2" data-id="H2" data-position="0.6075 3.1138 0.8775" data-normal="0 1 0" data-cooh="0" aria-label="Átomo H" tabindex="-1" style="color:#ffffff">H</button>
+      <button class="hs hs-h" slot="hotspot-H3" data-id="H3" data-position="-2.4255 1.8188 -0.2075" data-normal="0 1 0" data-cooh="1" aria-label="Átomo H" tabindex="-1" style="color:#ffffff">H</button>
     </model-viewer>
   </div>
 
@@ -277,9 +294,17 @@
       <div class="chips" role="group" aria-label="Opciones de visualización">
         <button class="chip" id="btnLabels" aria-pressed="false">Etiquetas</button>
         <button class="chip" id="btnCooh" aria-pressed="false">Resaltar –COOH</button>
+        <button class="chip" id="btnMeasure" aria-pressed="false">Medir</button>
       </div>
     </div>
     <p class="hint-cooh" id="hintCooh" aria-live="polite">Se resalta el grupo carboxilo (–COOH); el resto de la molécula se atenúa.</p>
+    <div class="measure" id="measure">
+      <p class="measure-text" id="measureText" aria-live="polite"></p>
+      <div class="measure-actions">
+        <button class="chip" id="btnMeasureCooh" type="button">Ejemplo: –COOH</button>
+        <button class="chip" id="btnMeasureClear" type="button">Borrar</button>
+      </div>
+    </div>
     <div class="control-row">
       <label class="ctrl-label" for="speedSlider">Velocidad</label>
       <input type="range" class="speed-slider" id="speedSlider" min="5" max="120" value="30" step="5">
@@ -349,7 +374,8 @@
   });
 
   /* ── Etiquetas de átomos y resaltado del grupo carboxilo ── */
-  const ATOMS = [{"id":"Cl1","cooh":false},{"id":"O1","cooh":true},{"id":"O2","cooh":true},{"id":"C1","cooh":false},{"id":"C2","cooh":true},{"id":"H1","cooh":false},{"id":"H2","cooh":false},{"id":"H3","cooh":true}];
+  const ATOMS = [{"id":"Cl1","el":"Cl","cooh":false,"pos":[2.1807,1.4579,0.2485]},{"id":"O1","el":"O","cooh":true,"pos":[-1.6354,2.3789,-0.1715]},{"id":"O2","el":"O","cooh":true,"pos":[-0.6384,0.3699,0.0585]},{"id":"C1","el":"C","cooh":false,"pos":[0.6896,2.4179,0.0435]},{"id":"C2","el":"C","cooh":true,"pos":[-0.5634,1.5629,-0.0155]},{"id":"H1","el":"H","cooh":false,"pos":[0.7715,2.9948,-0.8775]},{"id":"H2","el":"H","cooh":false,"pos":[0.6075,3.1138,0.8775]},{"id":"H3","el":"H","cooh":true,"pos":[-2.4255,1.8188,-0.2075]}];
+  const BONDS = [[0,3,1],[1,4,1],[1,7,1],[2,4,2],[3,4,1],[3,5,1],[3,6,1]];
   const btnLabels = document.getElementById('btnLabels');
   const btnCooh   = document.getElementById('btnCooh');
   const hintCooh  = document.getElementById('hintCooh');
@@ -375,6 +401,64 @@
     btnCooh.setAttribute('aria-pressed', on);
   }
   btnCooh.addEventListener('click', () => setCooh(btnCooh.getAttribute('aria-pressed') !== 'true'));
+
+  /* ── Medición: distancia, tipo de enlace y ángulo (posiciones en Å) ── */
+  const btnMeasure = document.getElementById('btnMeasure');
+  const measureBox = document.getElementById('measure');
+  const measureTxt = document.getElementById('measureText');
+  const hsByid = {};
+  mv.querySelectorAll('.hs').forEach(b => { hsByid[b.dataset.id] = b; });
+  let sel = [];
+  const f = (x, n) => x.toFixed(n).replace('.', ',');
+  const dist = (a, b) => Math.hypot(a.pos[0]-b.pos[0], a.pos[1]-b.pos[1], a.pos[2]-b.pos[2]);
+  const orden = (i, k) => { const e = BONDS.find(x => (x[0]===i && x[1]===k) || (x[0]===k && x[1]===i)); return e ? e[2] : 0; };
+  const sym = o => o === 2 ? '=' : o === 1 ? '–' : ' ··· ';
+  const tipo = o => o === 2 ? 'enlace doble' : o === 1 ? 'enlace simple' : 'átomos no enlazados';
+  function renderMeasure() {
+    ATOMS.forEach((a, i) => hsByid[a.id].classList.toggle('sel', sel.includes(i)));
+    const A = sel.map(i => ATOMS[i]);
+    if (A.length === 0) measureTxt.innerHTML = 'Toca un átomo para empezar. Con <b>2</b> átomos se mide la distancia; con <b>3</b>, el ángulo (el segundo es el vértice).';
+    else if (A.length === 1) measureTxt.innerHTML = 'Seleccionado: <b>' + A[0].el + '</b>. Toca otro átomo para medir la distancia.';
+    else {
+      const o = orden(sel[0], sel[1]);
+      let h = '<b>' + A[0].el + sym(o) + A[1].el + '</b> · ' + f(dist(A[0], A[1]), 3) + ' Å <small>' + tipo(o) + '</small>';
+      if (A.length === 3) {
+        const v = A[1], p = A[0], q = A[2];
+        const u = [p.pos[0]-v.pos[0], p.pos[1]-v.pos[1], p.pos[2]-v.pos[2]], w = [q.pos[0]-v.pos[0], q.pos[1]-v.pos[1], q.pos[2]-v.pos[2]];
+        const c = (u[0]*w[0]+u[1]*w[1]+u[2]*w[2]) / (Math.hypot(...u) * Math.hypot(...w));
+        const ang = Math.acos(Math.max(-1, Math.min(1, c))) * 180 / Math.PI;
+        const o2 = orden(sel[1], sel[2]);
+        h += '<br><b>' + A[1].el + sym(o2) + A[2].el + '</b> · ' + f(dist(A[1], A[2]), 3) + ' Å <small>' + tipo(o2) + '</small>'
+           + '<br>Ángulo <b>' + A[0].el + sym(o) + A[1].el + sym(o2) + A[2].el + ' = ' + f(ang, 1) + '°</b>';
+      } else h += '<small>Toca un tercer átomo para medir el ángulo.</small>';
+      measureTxt.innerHTML = h;
+    }
+  }
+  mv.querySelectorAll('.hs').forEach(b => b.addEventListener('click', ev => {
+    if (!viewerWrap.classList.contains('measure-on')) return;
+    ev.stopPropagation();
+    const i = ATOMS.findIndex(a => a.id === b.dataset.id);
+    if (sel.includes(i)) sel = sel.filter(x => x !== i);
+    else sel = sel.length >= 3 ? [i] : sel.concat(i);
+    renderMeasure();
+  }));
+  btnMeasure.addEventListener('click', () => {
+    const on = btnMeasure.getAttribute('aria-pressed') !== 'true';
+    btnMeasure.setAttribute('aria-pressed', on);
+    viewerWrap.classList.toggle('measure-on', on);
+    measureBox.classList.toggle('on', on);
+    mv.querySelectorAll('.hs').forEach(b => b.tabIndex = on ? 0 : -1);
+    if (on) { mv.removeAttribute('auto-rotate'); sel = []; renderMeasure(); }
+    else { if (toggleRot.checked) mv.setAttribute('auto-rotate', ''); sel = []; renderMeasure(); }
+  });
+  document.getElementById('btnMeasureClear').addEventListener('click', () => { sel = []; renderMeasure(); });
+  document.getElementById('btnMeasureCooh').addEventListener('click', () => {
+    /* O carbonílico (=O) – C – O del hidroxilo, del primer grupo –COOH */
+    const ci = ATOMS.findIndex(a => a.el === 'C' && a.cooh);
+    const vec = BONDS.filter(e => e[0] === ci || e[1] === ci).map(e => ({ k: e[0] === ci ? e[1] : e[0], o: e[2] })).filter(x => ATOMS[x.k].el === 'O' && ATOMS[x.k].cooh);
+    const dbl = vec.find(x => x.o === 2), oh = vec.find(x => x.o === 1);
+    if (ci >= 0 && dbl && oh) { sel = [dbl.k, ci, oh.k]; renderMeasure(); }
+  });
 
   btnInfo.addEventListener('click', () => {
     const open = molInfo.classList.toggle('open');

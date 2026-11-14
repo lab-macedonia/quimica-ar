@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comparar moléculas — Ácidos Carboxílicos en AR</title>
+  <meta name="description" content="Compara dos ácidos carboxílicos lado a lado en 3D: estructura, masa molar, punto de ebullición y pKa.">
+  <link rel="preconnect" href="https://ajax.googleapis.com" crossorigin>
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+  <style>
+    :root { --teal:#3ecfcf; --bg:#050a14; --surface:#0a1628; --surface2:#0e1e35; --text:#dff0f0; --text-muted:#6aacac; --text-faint:rgba(106,172,172,.6); --border:rgba(62,207,207,.12); }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Inter", system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 20px 16px 40px; }
+    .wrap { max-width: 1100px; margin: 0 auto; }
+    .back { color: var(--teal); text-decoration: none; font-size: .75rem; letter-spacing: 1px; text-transform: uppercase; }
+    .back:focus-visible, select:focus-visible, .chip:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; border-radius: 6px; }
+    h1 { font-size: 1.5rem; margin: 10px 0 4px; }
+    .sub { color: var(--text-muted); font-size: .85rem; margin-bottom: 18px; }
+    .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .col { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 12px; }
+    select { width: 100%; background: var(--surface2); color: var(--text); border: 1px solid rgba(62,207,207,.3); border-radius: 10px; padding: 9px 10px; font: 600 .9rem "Inter", sans-serif; }
+    model-viewer { width: 100%; height: 360px; margin-top: 10px; border-radius: 12px; background: radial-gradient(ellipse at 50% 40%, #0d2040 0%, #060c18 70%); --poster-color: transparent; }
+    .struct { margin-top: 8px; font: 600 .8rem "Courier New", monospace; color: var(--teal); text-align: center; }
+    .toolbar { display: flex; gap: 10px; align-items: center; margin: 14px 0; flex-wrap: wrap; }
+    .chip { font: 600 .75rem "Inter", sans-serif; color: var(--text-muted); background: transparent; border: 1px solid var(--border); border-radius: 20px; padding: 6px 14px; cursor: pointer; }
+    .chip[aria-pressed="true"] { background: rgba(32,200,170,.18); border-color: rgba(32,200,170,.55); color: var(--teal); }
+    .chip a { color: inherit; text-decoration: none; }
+    table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; font-size: .85rem; }
+    th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+    th { color: var(--text-muted); font-weight: 600; width: 22%; font-size: .72rem; letter-spacing: .3px; }
+    td { width: 39%; }
+    tr:last-child th, tr:last-child td { border-bottom: 0; }
+    .diff { margin-top: 14px; background: rgba(62,207,207,.07); border: 1px solid rgba(62,207,207,.25); border-radius: 12px; padding: 12px 14px; font-size: .85rem; line-height: 1.6; color: var(--text); }
+    .diff b { color: var(--teal); }
+    .loadnote { color: var(--text-faint); font-size: .72rem; margin-top: 10px; }
+    @media (max-width: 700px) { .cols { grid-template-columns: 1fr; } model-viewer { height: 280px; } th { width: 28%; } td { width: 36%; } }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="./#moleculas">← Colección</a>
+  <h1>Comparar dos moléculas</h1>
+  <p class="sub">Elige dos ácidos y gíralos juntos para ver en qué se parecen y en qué se diferencian.</p>
+  <div class="cols">
+    <div class="col">
+      <label class="sr" for="selA" style="position:absolute;left:-9999px">Molécula A</label>
+      <select id="selA"></select>
+      <model-viewer id="mvA" camera-controls disable-pan shadow-intensity="1" exposure="0.95" environment-image="neutral" interpolation-decay="200" alt="Molécula A en 3D"></model-viewer>
+      <p class="struct" id="stA"></p>
+    </div>
+    <div class="col">
+      <label class="sr" for="selB" style="position:absolute;left:-9999px">Molécula B</label>
+      <select id="selB"></select>
+      <model-viewer id="mvB" camera-controls disable-pan shadow-intensity="1" exposure="0.95" environment-image="neutral" interpolation-decay="200" alt="Molécula B en 3D"></model-viewer>
+      <p class="struct" id="stB"></p>
+    </div>
+  </div>
+  <div class="toolbar">
+    <button class="chip" id="btnSync" aria-pressed="true">Girar juntas</button>
+    <button class="chip" id="btnSwap">Intercambiar</button>
+    <span class="chip" style="border-style:dashed"><a id="lnkA" href="#">Abrir A en AR</a></span>
+    <span class="chip" style="border-style:dashed"><a id="lnkB" href="#">Abrir B en AR</a></span>
+  </div>
+  <table aria-label="Propiedades comparadas">
+    <thead><tr><th></th><th id="hA"></th><th id="hB"></th></tr></thead>
+    <tbody id="tbody"></tbody>
+  </table>
+  <div class="diff" id="diff" aria-live="polite"></div>
+</div>
+<script>
+  const MOLS = [{"f":"Acetico","n":"Ácido Acético","s":"CH₃COOH","fm":"C₂H₄O₂","ms":"60,05 g/mol","bp":"118,1 °C","g":"Carboxilo (–COOH)","pk":"4,76","p":4.76},{"f":"Butanoico","n":"Ácido Butanoico","s":"CH₃CH₂CH₂COOH","fm":"C₄H₈O₂","ms":"88,11 g/mol","bp":"163,7 °C","g":"Carboxilo (–COOH)","pk":"4,82","p":4.82},{"f":"Cloroacetico","n":"Ácido Cloroacético","s":"ClCH₂COOH","fm":"C₂H₃ClO₂","ms":"94,50 g/mol","bp":"189,3 °C","g":"Carboxilo (–COOH)","pk":"2,87","p":2.87},{"f":"Dimetilaminooxoacetico","n":"Ácido 2-(Dimetilamino)-2-oxoacético","s":"(CH₃)₂N–CO–COOH","fm":"C₄H₇NO₃","ms":"117,10 g/mol","bp":"n.d. (descompone)","g":"Carboxilo + Amida","pk":"ND","p":null},{"f":"Dimetilpropanoico","n":"Ácido 2,2-Dimetilpropanoico","s":"(CH₃)₃C–COOH","fm":"C₅H₁₀O₂","ms":"102,13 g/mol","bp":"163,8 °C","g":"Carboxilo (–COOH)","pk":"5,03","p":5.03},{"f":"Formico","n":"Ácido Fórmico","s":"HCOOH","fm":"CH₂O₂","ms":"46,03 g/mol","bp":"100,8 °C","g":"Carboxilo (–COOH)","pk":"3,75","p":3.75},{"f":"Glicolico","n":"Ácido Glicólico","s":"HOCH₂COOH","fm":"C₂H₄O₃","ms":"76,05 g/mol","bp":"≈100 °C (descompone)","g":"Carboxilo + Hidroxilo","pk":"3,83","p":3.83},{"f":"Glioxilico","n":"Ácido Glioxílico","s":"OHC–COOH","fm":"C₂H₂O₃","ms":"74,04 g/mol","bp":"≈111 °C (sol. acuosa)","g":"Carboxilo + Aldehído","pk":"3,3","p":3.3},{"f":"Lactico","n":"Ácido Láctico","s":"CH₃CH(OH)COOH","fm":"C₃H₆O₃","ms":"90,08 g/mol","bp":"122 °C (15 mmHg)","g":"Carboxilo + Hidroxilo","pk":"3,86","p":3.86},{"f":"Oxalico","n":"Ácido Oxálico","s":"HOOC–COOH","fm":"C₂H₂O₄","ms":"90,03 g/mol","bp":"Sublima a 157 °C (descompone ~189 °C)","g":"Dicarboxílico","pk":"pKa₁: 1,25 · pKa₂: 4,27","p":1.25},{"f":"Propanoico","n":"Ácido Propanoico","s":"CH₃CH₂COOH","fm":"C₃H₆O₂","ms":"74,08 g/mol","bp":"141,1 °C","g":"Carboxilo (–COOH)","pk":"4,88","p":4.88},{"f":"Sulfanylacetic","n":"Ácido Tioglicólico","s":"HSCH₂COOH","fm":"C₂H₄O₂S","ms":"92,12 g/mol","bp":"≈120 °C (20 mmHg)","g":"Carboxilo + Tiol (–SH)","pk":"pKa₁ 3,68 · pKa₂ 10,5 †","p":3.68},{"f":"Trifluoroacetico","n":"Ácido Trifluoroacético","s":"CF₃COOH","fm":"C₂HF₃O₂","ms":"114,02 g/mol","bp":"72,4 °C","g":"Carboxilo (–COOH)","pk":"0,23","p":0.23},{"f":"2-phosphonoacetic","n":"Ácido 2-Fosfonoacético","s":"H₂O₃P–CH₂–COOH","fm":"C₂H₅O₅P","ms":"140,03 g/mol","bp":"n.d. (descompone)","g":"Carboxilo + Fosfonato","pk":"pKa₁ 2,0 · pKa₂ 5,11 · pKa₃ 8,69 †","p":2.0}];
+  const $ = id => document.getElementById(id);
+  const selA = $('selA'), selB = $('selB'), mvA = $('mvA'), mvB = $('mvB');
+  const q = new URLSearchParams(location.search);
+  MOLS.forEach(m => { for (const s of [selA, selB]) { const o = document.createElement('option'); o.value = m.f; o.textContent = m.n; s.appendChild(o); } });
+  const byFile = f => MOLS.find(m => m.f === f);
+  selA.value = byFile(q.get('a')) ? q.get('a') : 'Acetico';
+  selB.value = byFile(q.get('b')) ? q.get('b') : (selA.value === 'Trifluoroacetico' ? 'Cloroacetico' : 'Trifluoroacetico');
+  const fmt = x => x.toFixed(2).replace('.', ',');
+  function render() {
+    const A = byFile(selA.value), B = byFile(selB.value);
+    for (const [mv, m, st, h, l] of [[mvA, A, 'stA', 'hA', 'lnkA'], [mvB, B, 'stB', 'hB', 'lnkB']]) {
+      if (mv.getAttribute('src') !== m.f + '.glb') mv.setAttribute('src', m.f + '.glb');
+      $(st).textContent = m.s + ' · ' + m.fm; $(h).textContent = m.n; $(l).href = m.f + '.html';
+    }
+    const rows = [['Fórmula', 'fm'], ['Masa molar', 'ms'], ['Punto de ebullición', 'bp'], ['Grupo funcional', 'g'], ['pKa', 'pk']];
+    $('tbody').innerHTML = rows.map(([k, p]) => '<tr><th scope="row">' + k + '</th><td>' + A[p] + '</td><td>' + B[p] + '</td></tr>').join('');
+    let d;
+    if (A.f === B.f) d = 'Elegiste la misma molécula dos veces; cambia una para compararlas.';
+    else if (A.p == null || B.p == null) d = 'Falta el pKa de una de las moléculas, así que no se puede comparar su acidez.';
+    else {
+      const dp = A.p - B.p, r = Math.pow(10, Math.abs(dp));
+      const [fuerte, debil] = dp < 0 ? [A, B] : [B, A];
+      d = Math.abs(dp) < 0.05 ? 'Tienen un pKa₁ prácticamente igual (' + fmt(A.p) + ').'
+        : '<b>' + fuerte.n + '</b> (pKa₁ ' + fmt(fuerte.p) + ') es más ácido que <b>' + debil.n + '</b> (pKa₁ ' + fmt(debil.p) + '): diferencia de ' + fmt(Math.abs(dp)) + ' unidades de pKa, es decir ≈' + (r >= 1000 ? Number(r.toPrecision(2)).toLocaleString('es-CL') : r >= 10 ? Math.round(r) : fmt(r)) + ' veces más ácido.';
+    }
+    $('diff').innerHTML = d;
+    history.replaceState(null, '', '?a=' + selA.value + '&b=' + selB.value);
+  }
+  selA.addEventListener('change', render); selB.addEventListener('change', render);
+  $('btnSwap').addEventListener('click', () => { const t = selA.value; selA.value = selB.value; selB.value = t; render(); });
+  /* cámaras sincronizadas: solo se propaga el movimiento hecho por el usuario */
+  const sync = $('btnSync');
+  sync.addEventListener('click', () => sync.setAttribute('aria-pressed', sync.getAttribute('aria-pressed') !== 'true'));
+  for (const [from, to] of [[mvA, mvB], [mvB, mvA]]) {
+    from.addEventListener('camera-change', e => {
+      if (e.detail.source !== 'user-interaction' || sync.getAttribute('aria-pressed') !== 'true') return;
+      const o = from.getCameraOrbit(); to.cameraOrbit = o.theta + 'rad ' + o.phi + 'rad ' + o.radius + 'm';
+    });
+  }
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) { mvA.setAttribute('auto-rotate', ''); mvB.setAttribute('auto-rotate', ''); }
+  render();
+</script>
+</body>
+</html>
