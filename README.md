@@ -25,11 +25,13 @@ La iniciativa es parte de un proyecto de investigación en química y educación
 | 06 | Ácido Glicólico | C₂H₄O₃ | 3,83 |
 | 07 | Ácido Glioxílico | C₂H₂O₃ | 3,3 |
 | 08 | Ácido Láctico | C₃H₆O₃ | 3,86 |
-| 09 | Ácido Oxálico | C₂H₂O₄ | 1,25 / 4,27 |
+| 09 | Ácido Oxálico | C₂H₂O₄ | ≈1,25 / ≈4,28 |
 | 10 | Ácido Propanoico | C₃H₆O₂ | 4,88 |
-| 11 | Ácido Tioglicólico | C₂H₄O₂S | pKa₁ 3,6 · pKa₂ 10,5 |
-| 12 | Ácido Trifluoroacético | C₂HF₃O₂ | 0,23 |
-| 13 | Ácido 2-Fosfonoacético | C₂H₅O₅P | pKa₁ 2,0 · pKa₂ 5,11 · pKa₃ 8,69 |
+| 11 | Ácido Tioglicólico | C₂H₄O₂S | pKa₁ ≈3,6 · pKa₂ ≈10,5 |
+| 12 | Ácido Trifluoroacético | C₂HF₃O₂ | 0,23* |
+| 13 | Ácido 2-Fosfonoacético | C₂H₅O₅P | pKa₁ ≈2,0 · pKa₂ 5,11 · pKa₃ 8,69 |
+
+\* Algunas compilaciones reportan pKa ≈ 0,5 (0,52) para el ácido trifluoroacético. Los valores aproximados (≈) siguen al libro que acompaña esta colección.
 
 ## 📱 Cómo usar
 
