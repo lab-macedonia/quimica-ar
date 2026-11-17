@@ -56,6 +56,11 @@
     }
     .back:hover, .back:focus-visible { color: #3ecfcf; }
     .counter { font-size: .65rem; color: rgba(180,200,200,.4); font-family: "Courier New", monospace; letter-spacing: 1px; }
+    .btn-compare { display: inline-block; font-size: .68rem; font-weight: 600; letter-spacing: .5px; text-transform: uppercase; text-decoration: none;
+      color: #3ecfcf; background: rgba(62,207,207,.12); border: 1px solid rgba(62,207,207,.45); border-radius: 20px; padding: 5px 12px; transition: all .2s; }
+    .btn-compare:hover { background: rgba(62,207,207,.22); border-color: #3ecfcf; }
+    .btn-compare:focus-visible { outline: 2px solid #3ecfcf; outline-offset: 2px; }
+    .topnav-right { display: flex; align-items: center; gap: 12px; }
     .header {
       display: flex;
       align-items: center;
@@ -209,7 +214,7 @@
 <div class="card">
   <div class="topnav">
     <a class="back" href="./#moleculas">← Colección</a>
-    <span class="counter" aria-label="Molécula 6 de 14"><a href="comparar.html?a=Formico" style="color:inherit;margin-right:12px">Comparar</a>6 / 14</span>
+    <div class="topnav-right"><a class="btn-compare" href="comparar.html?a=Formico" role="button">⇄ Comparar</a><span class="counter" aria-label="Molécula 6 de 14">6 / 14</span></div>
   </div>
   <div class="header">
     <div>
