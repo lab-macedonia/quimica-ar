@@ -10,7 +10,7 @@
 
 Este repositorio contiene los archivos necesarios para explorar **14 modelos 3D de ácidos carboxílicos** en Realidad Aumentada directamente desde el navegador del teléfono, sin necesidad de instalar ninguna aplicación.
 
-La iniciativa es parte de un proyecto de investigación en química y educación química del [Laboratorio MACEDONIA](https://sites.google.com/umce.cl/lab-macedonia/) —química orgánica y formación inicial docente— desarrollado en colaboración con el [Laboratorio de Tecnología (LabTec)](https://sites.google.com/umce.cl/labtec) de la [Universidad Metropolitana de Ciencias de la Educación (UMCE)](https://www.umce.cl/).
+La iniciativa es parte de un proyecto de investigación en química y educación química del [Laboratorio MACEDONIA](https://lab-macedonia.github.io/sitio-web/) —química orgánica y formación inicial docente— desarrollado en colaboración con el [Laboratorio de Tecnología (LabTec)](https://sites.google.com/umce.cl/labtec) de la [Universidad Metropolitana de Ciencias de la Educación (UMCE)](https://www.umce.cl/).
 
 ## 🧪 Moléculas disponibles
 
@@ -75,7 +75,7 @@ quimica-ar/
 
 | | |
 |---|---|
-| **Laboratorio MACEDONIA** | Química orgánica y educación química · Formación inicial docente (FID) · [Visitar sitio](https://sites.google.com/umce.cl/lab-macedonia/) |
+| **Laboratorio MACEDONIA** | Química orgánica y educación química · Formación inicial docente (FID) · [Visitar sitio](https://lab-macedonia.github.io/sitio-web/) |
 | **LabTec** | Laboratorio de Tecnología · Innovación en educación científica · [Visitar sitio](https://sites.google.com/umce.cl/labtec) |
 | **UMCE** | Universidad Metropolitana de Ciencias de la Educación · [www.umce.cl](https://www.umce.cl/) |
 
